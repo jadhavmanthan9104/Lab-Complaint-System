@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #eef2ff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      color: #666;
+    }
+
+    .top-row, .bottom-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #f4f6ff;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: 0.2s;
+      border: 1px solid #e0e5ff;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      background: #e9ecff;
+    }
+
+    .icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 5px 0;
+      font-size: 17px;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #666;
+    }
+
+    @media(max-width: 700px) {
+      .top-row, .bottom-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h1>👋 Hello, Student!</h1>
+      <p>How can we help today?</p>
+    </div>
+
+    <!-- Top Cards -->
+    <div class="top-row">
+      <div class="card" onclick="alert('Lab Complaint Page')">
+        <div class="icon">🛠</div>
+        <h3>LAB COMPLAINT</h3>
+        <p>Report a problem with labs easily</p>
+      </div>
+
+      <div class="card" onclick="alert('ICC Complaint Page')">
+        <div class="icon">🧑‍⚖️</div>
+        <h3>ICC COMPLAINT</h3>
+        <p>Report sensitive issue confidentially</p>
+      </div>
+
+      <div class="card" onclick="alert('Track Status Page')">
+        <div class="icon">📑</div>
+        <h3>TRACK STATUS</h3>
+        <p>View progress of complaints</p>
+      </div>
+    </div>
+
+    <!-- Bottom Cards -->
+    <div class="bottom-row">
+      <div class="card" onclick="alert('Notifications Page')">
+        <div class="icon">🔔</div>
+        <h3>Notifications</h3>
+      </div>
+
+      <div class="card" onclick="alert('My Complaint History')">
+        <div class="icon">📚</div>
+        <h3>My Complaint History</h3>
+      </div>
+
+      <div class="card" onclick="alert('Profile Page')">
+        <div class="icon">🧾</div>
+        <h3>Profile</h3>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
