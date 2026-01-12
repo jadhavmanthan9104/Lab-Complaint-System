@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family:"Segoe UI", Arial, sans-serif;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(135deg, #eef2ff, #fdfefe);
+    }
+
+    .box{
+      background:#ffffff;
+      padding:30px;
+      width:100%;
+      max-width:380px;
+      border-radius:20px;
+      box-shadow:0 18px 45px rgba(0,0,0,0.15);
+    }
+
+    .logo{
+      text-align:center;
+      margin-bottom:10px;
+    }
+
+    .logo img{
+      width:170px;
+      max-width:100%;
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+      color:#1e1b4b;
+      font-size:24px;
+      font-weight:700;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      margin:6px 0 16px;
+      border-radius:12px;
+      border:1px solid #c7d2fe;
+      font-size:14px;
+      outline:none;
+    }
+
+    input:focus{
+      border-color:#4f46e5;
+      box-shadow:0 0 0 3px rgba(79,70,229,0.2);
+    }
+
+    button{
+      width:100%;
+      padding:13px;
+      border:none;
+      border-radius:14px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .otp-btn{
+      background:linear-gradient(135deg, #16a34a, #22c55e);
+      color:white;
+      margin-bottom:12px;
+    }
+
+    .signup-btn{
+      background:linear-gradient(135deg, #4f46e5, #6366f1);
+      color:white;
+    }
+
+    input:disabled{
+      background:#f1f5f9;
+      cursor:not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <!-- College Logo -->
+  <div class="logo">
+    <img src="sies_ascn_logo.jpg" alt="SIES College Logo">
+  </div>
+
+  <h2>👨‍💼 Admin Signup</h2>
+
+  <form method="post">
+
+    <input type="text" name="name" placeholder="Admin Name" required>
+
+    <input type="email" name="email" placeholder="Official Email Address" required>
+
+    <!-- Send OTP -->
+    <button type="button" class="otp-btn" onclick="enableOTP()">Send OTP</button>
+
+    <!-- OTP disabled initially -->
+    <input type="text" id="otp" name="otp" placeholder="Enter OTP" disabled required>
+
+    <input type="password" name="password" placeholder="Create Password" required>
+
+    <input type="password" name="confirm" placeholder="Confirm Password" required>
+
+    <button type="submit" class="signup-btn">Create Admin Account</button>
+
+  </form>
+</div>
+
+<script>
+  function enableOTP() {
+    const otpField = document.getElementById("otp");
+    otpField.disabled = false;
+    otpField.focus();
+    alert("OTP sent to your email (demo)");
+  }
+</script>
+
+</body>
+</html>

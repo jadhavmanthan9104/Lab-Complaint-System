@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Complaints</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      padding: 20px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .logo img {
+      width: 80px;
+      height: auto;
+    }
+
+    .header {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 10px 0 20px;
+      border-bottom: 2px solid #eee;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    th {
+      background: #4f46e5;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f5f6ff;
+    }
+
+    .view-btn {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .view-btn:hover {
+      background: #4338ca;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="logo">
+      <img src="sies_ascn_logo.jpg" alt="Logo">
+    </div>
+
+    <div class="header">MY COMPLAINTS</div>
+
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+
+      <tr>
+        <td>1012</td>
+        <td>Lab Issue</td>
+        <td>In Progress</td>
+        <td><button class="view-btn" onclick="alert('Viewing complaint 1012')">View</button></td>
+      </tr>
+
+      <tr>
+        <td>5562</td>
+        <td>ICC Case</td>
+        <td>Under Review</td>
+        <td><button class="view-btn" onclick="alert('Viewing complaint 5562')">View</button></td>
+      </tr>
+    </table>
+
+  </div>
+
+</body>
+</html>

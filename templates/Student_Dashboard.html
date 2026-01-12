@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Dashboard - Sidebar</title>
+<style>
+  body {
+    margin:0;
+    font-family: "Segoe UI", Arial;
+    background:#eef2ff;
+    display:flex;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    width:240px;
+    background:#ffffff;
+    height:100vh;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.08);
+    padding:18px;
+  }
+
+  .sidebar img{
+    width:120px;
+    margin-bottom:28px;
+  }
+
+  .nav-item{
+    padding:10px 8px;
+    margin-bottom:8px;
+    border-radius:8px;
+    cursor:pointer;
+    color:#333;
+    font-size:15px;
+    transition:.2s;
+  }
+  .nav-item:hover{
+    background:#eef1ff;
+  }
+
+  /* Main Content */
+  .content{
+    flex:1;
+    padding:28px;
+  }
+
+  .header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .header h1{
+    margin:0;
+    font-size:24px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+  }
+
+  .card{
+    background:#fff;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.06);
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+  }
+  .icon{
+    font-size:30px;
+    margin-bottom:10px;
+  }
+
+  @media(max-width:800px){
+    .grid{grid-template-columns:1fr;}
+    .sidebar{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <img src="https://raw.githubusercontent.com/jadhavmanthan9104/Lab-Complaint-System/main/images/sies_ascn_logo.jpg">
+  <div class="nav-item">Dashboard</div>
+  <div class="nav-item">Lab Complaint</div>
+  <div class="nav-item">ICC Complaint</div>
+  <div class="nav-item">Track Status</div>
+  <div class="nav-item">Notifications</div>
+  <div class="nav-item">My History</div>
+  <div class="nav-item">Profile</div>
+</div>
+
+<!-- Content Area -->
+<div class="content">
+
+  <div class="header">
+    <h1>👋 Hello, Student!"Use the options below to submit or monitor complaints."</h1>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="icon">🛠</div>LAB COMPLAINT</div>
+    <div class="card"><div class="icon">🧑‍⚖️</div>ICC COMPLAINT</div>
+    <div class="card"><div class="icon">📑</div>TRACK STATUS</div>
+    <div class="card"><div class="icon">🔔</div>NOTIFICATIONS</div>
+    <div class="card"><div class="icon">📚</div>COMPLAINT HISTORY</div>
+    <div class="card"><div class="icon">🧾</div>PROFILE</div>
+  </div>
+
+</div>
+
+</body>
+</html>
