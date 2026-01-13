@@ -1,209 +1,252 @@
-from flask import Flask, render_template, request, redirect, session, url_for
-import sqlite3, os
+from flask import Flask, render_template, request, redirect, url_for, session
+import sqlite3
+import os
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-DB_NAME = "database.db"
+DATABASE = "database.db"
+UPLOAD_FOLDER = "static/uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# ---------------- DATABASE SETUP ----------------
+
+# ---------------- DATABASE CONNECTION ----------------
+def get_db():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+# ---------------- DATABASE INITIALIZATION ----------------
 def init_db():
-    con = sqlite3.connect(DB_NAME)
-    cur = con.cursor()
+    conn = get_db()
+    cur = conn.cursor()
 
+    # Users table
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        email TEXT UNIQUE,
-        password TEXT,
-        role TEXT
-    )
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email TEXT UNIQUE,
+            password TEXT,
+            role TEXT
+        )
     """)
 
+    # Complaints table
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS lab_complaints (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        student_id INTEGER,
-        lab TEXT,
-        category TEXT,
-        description TEXT,
-        image TEXT,
-        status TEXT DEFAULT 'Pending'
-    )
+        CREATE TABLE IF NOT EXISTS complaints (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            type TEXT,
+            category TEXT,
+            description TEXT,
+            image TEXT,
+            status TEXT,
+            assigned_to INTEGER,
+            created_at TEXT
+        )
     """)
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS icc_complaints (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        student_id INTEGER,
-        type TEXT,
-        incident_date TEXT,
-        description TEXT,
-        evidence TEXT,
-        counseling TEXT,
-        status TEXT DEFAULT 'Under Review'
-    )
-    """)
+    conn.commit()
+    conn.close()
 
-    con.commit()
-    con.close()
 
 init_db()
+
 
 # ---------------- LOGIN ----------------
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        role = request.form["role"]
+        email = request.form.get("email")
+        password = request.form.get("password")
+        role = request.form.get("role")
 
-        con = sqlite3.connect(DB_NAME)
-        cur = con.cursor()
-        cur.execute(
+        conn = get_db()
+        user = conn.execute(
             "SELECT * FROM users WHERE email=? AND password=? AND role=?",
-            (email, password, role)
-        )
-        user = cur.fetchone()
-        con.close()
+            (email, password, role.lower())
+        ).fetchone()
+        conn.close()
 
         if user:
-            session["user_id"] = user[0]
-            session["role"] = user[4]
+            session["user_id"] = user["id"]
+            session["role"] = user["role"]
 
             if role == "Student":
-                return redirect("/student")
+                return redirect("/student/dashboard")
+            elif role == "Admin":
+                return redirect("/admin/dashboard")
             elif role == "Technician":
-                return redirect("/technician")
-            else:
-                return redirect("/admin")
+                return redirect("/technician/dashboard")
+            elif role == "ICC":
+                return redirect("/icc/dashboard")
 
-        return "Invalid Login"
+        return "Invalid credentials"
 
-    return render_template("login.html")
+    return render_template("login_page.html")
+
 
 # ---------------- STUDENT SIGNUP ----------------
-@app.route("/student_signup", methods=["GET", "POST"])
+@app.route("/student/signup", methods=["GET", "POST"])
 def student_signup():
     if request.method == "POST":
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
 
-        con = sqlite3.connect(DB_NAME)
-        cur = con.cursor()
-        cur.execute(
-            "INSERT INTO users (name,email,password,role) VALUES (?,?,?,?)",
-            (name, email, password, "Student")
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO users (name, email, password, role) VALUES (?,?,?,?)",
+            (name, email, password, "student")
         )
-        con.commit()
-        con.close()
+        conn.commit()
+        conn.close()
 
         return redirect("/")
 
     return render_template("student_signup.html")
 
+
 # ---------------- ADMIN SIGNUP ----------------
-@app.route("/admin_signup", methods=["GET", "POST"])
+@app.route("/admin/signup", methods=["GET", "POST"])
 def admin_signup():
     if request.method == "POST":
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
 
-        con = sqlite3.connect(DB_NAME)
-        cur = con.cursor()
-        cur.execute(
-            "INSERT INTO users (name,email,password,role) VALUES (?,?,?,?)",
-            (name, email, password, "Admin")
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO users (name, email, password, role) VALUES (?,?,?,?)",
+            (name, email, password, "admin")
         )
-        con.commit()
-        con.close()
+        conn.commit()
+        conn.close()
 
         return redirect("/")
 
     return render_template("admin_signup.html")
 
-# ---------------- DASHBOARDS ----------------
-@app.route("/student")
+
+# ---------------- STUDENT DASHBOARD ----------------
+@app.route("/student/dashboard")
 def student_dashboard():
-    return render_template("student_dashboard.html")
+    return render_template("Student_Dashboard.html")
 
-@app.route("/technician")
-def technician_dashboard():
-    return render_template("technician_dashboard.html")
 
-@app.route("/admin")
+# ---------------- ADMIN DASHBOARD ----------------
+@app.route("/admin/dashboard")
 def admin_dashboard():
-    return render_template("admin_dashboard.html")
+    return render_template("Adminpanel.html")
+
+
+# ---------------- TECHNICIAN DASHBOARD ----------------
+@app.route("/technician/dashboard")
+def technician_dashboard():
+    return render_template("Technician_Dashboard.html")
+
+
+# ---------------- ICC DASHBOARD ----------------
+@app.route("/icc/dashboard")
+def icc_dashboard():
+    return "ICC Dashboard (Backend Ready)"
+
 
 # ---------------- LAB COMPLAINT ----------------
-@app.route("/lab_complaint", methods=["GET", "POST"])
+@app.route("/complaint/lab", methods=["GET", "POST"])
 def lab_complaint():
     if request.method == "POST":
-        lab = request.form["lab"]
-        category = request.form["category"]
-        description = request.form["description"]
+        lab = request.form.get("lab")
+        category = request.form.get("category")
+        description = request.form.get("description")
 
-        con = sqlite3.connect(DB_NAME)
-        cur = con.cursor()
-        cur.execute(
-            """INSERT INTO lab_complaints 
-               (student_id,lab,category,description) 
-               VALUES (?,?,?,?)""",
-            (session["user_id"], lab, category, description)
-        )
-        con.commit()
-        con.close()
+        image = request.files.get("image")
+        image_name = None
 
-        return redirect("/status")
+        if image:
+            image_name = image.filename
+            image.save(os.path.join(UPLOAD_FOLDER, image_name))
 
-    return render_template("lab_complaint.html")
+        conn = get_db()
+        conn.execute("""
+            INSERT INTO complaints
+            (user_id, type, category, description, image, status, created_at)
+            VALUES (?,?,?,?,?,?,?)
+        """, (
+            session.get("user_id"),
+            "lab",
+            category,
+            description,
+            image_name,
+            "Pending",
+            datetime.now()
+        ))
+        conn.commit()
+        conn.close()
+
+        return redirect("/complaints/my")
+
+    return render_template("complaint_Form.html")
+
 
 # ---------------- ICC COMPLAINT ----------------
-@app.route("/icc_complaint", methods=["GET", "POST"])
+@app.route("/complaint/icc", methods=["GET", "POST"])
 def icc_complaint():
     if request.method == "POST":
-        ctype = request.form["type"]
-        date = request.form["date"]
-        desc = request.form["description"]
-        counseling = request.form["counseling"]
+        category = request.form.get("category")
+        description = request.form.get("description")
 
-        con = sqlite3.connect(DB_NAME)
-        cur = con.cursor()
-        cur.execute(
-            """INSERT INTO icc_complaints
-               (student_id,type,incident_date,description,counseling)
-               VALUES (?,?,?,?,?)""",
-            (session["user_id"], ctype, date, desc, counseling)
-        )
-        con.commit()
-        con.close()
+        file = request.files.get("evidence")
+        file_name = None
 
-        return redirect("/status")
+        if file:
+            file_name = file.filename
+            file.save(os.path.join(UPLOAD_FOLDER, file_name))
 
-    return render_template("icc_complaint.html")
+        conn = get_db()
+        conn.execute("""
+            INSERT INTO complaints
+            (user_id, type, category, description, image, status, created_at)
+            VALUES (?,?,?,?,?,?,?)
+        """, (
+            session.get("user_id"),
+            "icc",
+            category,
+            description,
+            file_name,
+            "Under Review",
+            datetime.now()
+        ))
+        conn.commit()
+        conn.close()
 
-# ---------------- COMPLAINT STATUS ----------------
-@app.route("/status")
-def complaint_status():
-    con = sqlite3.connect(DB_NAME)
-    cur = con.cursor()
-    cur.execute(
-        "SELECT id, lab, category, status FROM lab_complaints WHERE student_id=?",
-        (session["user_id"],)
-    )
-    complaints = cur.fetchall()
-    con.close()
+        return redirect("/complaints/my")
 
-    return render_template("complaint_status.html", complaints=complaints)
+    return render_template("ICC_complaint.html")
+
+
+# ---------------- VIEW MY COMPLAINTS ----------------
+@app.route("/complaints/my")
+def my_complaints():
+    conn = get_db()
+    complaints = conn.execute(
+        "SELECT * FROM complaints WHERE user_id=?",
+        (session.get("user_id"),)
+    ).fetchall()
+    conn.close()
+
+    return render_template("complaint_dashboard.html", complaints=complaints)
+
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
+
 
 # ---------------- RUN APP ----------------
 if __name__ == "__main__":

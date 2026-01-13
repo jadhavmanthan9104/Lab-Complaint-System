@@ -124,12 +124,12 @@
   <div class="login-box">
 
     <div class="logo">
-      <img src="sies_ascn_logo.jpg" alt="SIES College Logo">
+      <img src="{{ url_for('static', filename='images/sies_ascn_logo.jpg') }}">
     </div>
 
     <div class="header">🔐 Welcome Back</div>
 
-    <form onsubmit="return loginUser()">
+    <form method="post" action="/">
       <label>✉ Email Address</label>
       <input type="email" id="email" placeholder="Enter your email" required>
 
